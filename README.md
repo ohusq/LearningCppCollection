@@ -1,5 +1,2 @@
 # LearningCppCollection
-Collection of my CPP projects into a single repo
-
-
-### Notice; WIN10-SSD = ohusq
+Collection of my CPP projects / stuff into a single repo
