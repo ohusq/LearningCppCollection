@@ -1,6 +1,6 @@
 #include <iostream>
 #include <windows.h>
-#include <string>
+
 #include <filesystem>
 
 bool initializeKernel32(HMODULE& kernel32Module, LPVOID& loadLibraryAddress) {
@@ -95,6 +95,20 @@ int loadMenu(int totalOptions) {
     }
 }
 
+bool restartExplorer() {
+	std::cout << "Restarting explorer.exe..." << std::endl;
+	system("taskkill /f /im explorer.exe");
+	system("start explorer.exe");
+    if (system("explorer.exe")) {
+		std::cout << "Explorer restarted successfully!" << std::endl;
+        return true;
+	}
+    else {
+		std::cout << "Failed to restart explorer.exe!" << std::endl;
+        return false;
+	}
+}
+
 int main()
 {
     int totalOptions = 2;
@@ -102,9 +116,9 @@ int main()
 
     std::string dllPath;
 
-    HMODULE kernel32Module = NULL;
-    LPVOID loadLibraryAddress = NULL;
-    bool initializationSuccessful = false;
+    HMODULE kernel32Module = NULL; // Handle to kernel32.dll
+    LPVOID loadLibraryAddress = NULL; // Address of LoadLibraryA
+    bool initializationSuccessful = false; // Flag to check if initialization was successful
 
     switch (choice) {
     case 1:
@@ -120,6 +134,7 @@ int main()
 
         initializationSuccessful = initializeKernel32(kernel32Module, loadLibraryAddress);
         if (!initializationSuccessful) {
+            std::cout << "Initialization failed!";
             exit(1); // Exit with an error code
         }
 
@@ -127,10 +142,15 @@ int main()
         break;
     case 2:
         std::cout << "You chose option 2" << std::endl;
-        std::cout << "Restarting explorer.exe..." << std::endl;
-        system("taskkill /f /im explorer.exe");
-        system("start explorer.exe");
-        std::cout << "Explorer restarted successfully!" << std::endl;
+        bool explorerInt;
+        explorerInt = restartExplorer(); // true = success, false = fail
+
+        if (explorerInt) {
+			std::cout << "Succes.." << std::endl;
+		}
+        else {
+			std::cout << "It seems explorer.exe failed to start, you can restart it with\nWIN + R and type 'explorer.exe' and hit run!" << std::endl;
+		}
         break;
     default:
         std::cout << "You chose an invalid option" << std::endl;
