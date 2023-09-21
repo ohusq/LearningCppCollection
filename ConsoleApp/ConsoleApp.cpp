@@ -149,7 +149,7 @@ int main()
 			std::cout << "Succes.." << std::endl;
 		}
         else {
-			std::cout << "It seems explorer.exe failed to start, you can restart it with\nWIN + R and type 'explorer.exe' and hit run!" << std::endl;
+			std::cout << "It seems explorer.exe failed to start, you can restart it with:\nWIN + R and type 'explorer.exe' and hit run!" << std::endl;
 		}
         break;
     default:
