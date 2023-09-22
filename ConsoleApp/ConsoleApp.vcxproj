@@ -135,6 +135,7 @@
     <ClInclude Include="DLL_Functions.h" />
     <ClInclude Include="passwordGen.h" />
     <ClInclude Include="restartExplorerHeader.h" />
+    <ClInclude Include="taskkill.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

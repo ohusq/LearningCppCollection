@@ -5,6 +5,7 @@
 #include "passwordGen.h" // Password generator header (generatePassword function)
 #include "restartExplorerHeader.h" // Restart explorer header (restartExplorer function
 #include "DLL_Functions.h" // DLL injector header (initializeKernel32, inject_dll functions)
+#include "taskkill.h" // Taskkill header (taskkill_force function)
 
 // Pre-declare functions
 std::string generatePassword(int length);
