@@ -131,6 +131,11 @@
   <ItemGroup>
     <ClCompile Include="ConsoleApp.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DLL_Functions.h" />
+    <ClInclude Include="passwordGen.h" />
+    <ClInclude Include="restartExplorerHeader.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

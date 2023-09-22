@@ -1,86 +1,23 @@
 #include <iostream>
 #include <windows.h>
-
 #include <filesystem>
 
-bool initializeKernel32(HMODULE& kernel32Module, LPVOID& loadLibraryAddress) {
-    kernel32Module = GetModuleHandleA("kernel32.dll");
-    if (kernel32Module == NULL) {
-        std::cerr << "Failed to get the handle of kernel32.dll!" << std::endl;
-        return false;
-    }
+#include "passwordGen.h" // Password generator header (generatePassword function)
+#include "restartExplorerHeader.h" // Restart explorer header (restartExplorer function
+#include "DLL_Functions.h" // DLL injector header (initializeKernel32, inject_dll functions)
 
-    loadLibraryAddress = GetProcAddress(kernel32Module, "LoadLibraryA");
-    if (loadLibraryAddress == NULL) {
-        std::cerr << "Failed to get the address of LoadLibraryA!" << std::endl;
-        return false;
-    }
-
-    return true;
-}
-
-int inject_dll(const std::string& dllPath, DWORD processID, LPVOID loadLibraryAddress) {
-    // Convert DLL path to C-style string
-    const char* dllPathStr = dllPath.c_str();
-
-    std::cout << "Injecting " << dllPath << " into process with PID " << processID << "..." << std::endl;
-
-    // Check if the DLL file exists in the specified path
-    if (!std::filesystem::exists(dllPath)) {
-        std::cerr << "DLL not found!" << std::endl;
-        return 1;
-    }
-
-    // Open the target process by PID
-    HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, processID);
-    if (hProcess == NULL) {
-        std::cerr << "Failed to open the target process!" << std::endl;
-        return 1;
-    }
-
-    // Allocate memory for the DLL path in the target process
-    size_t dllPathLength = strlen(dllPathStr) + 1;
-    LPVOID dllPathAddress = VirtualAllocEx(hProcess, NULL, dllPathLength, MEM_COMMIT, PAGE_READWRITE);
-    if (dllPathAddress == NULL) {
-        std::cerr << "Failed to allocate memory in the target process!" << std::endl;
-        CloseHandle(hProcess);
-        return 1;
-    }
-
-    // Write the DLL path to the allocated memory
-    if (!WriteProcessMemory(hProcess, dllPathAddress, dllPathStr, dllPathLength, NULL)) {
-        std::cerr << "Failed to write DLL path to the target process!" << std::endl;
-        VirtualFreeEx(hProcess, dllPathAddress, 0, MEM_RELEASE);
-        CloseHandle(hProcess);
-        return 1;
-    }
-
-    // Create a remote thread to load the DLL
-    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)loadLibraryAddress, dllPathAddress, 0, NULL);
-    if (hThread == NULL) {
-        std::cerr << "Failed to create a remote thread in the target process!" << std::endl;
-        VirtualFreeEx(hProcess, dllPathAddress, 0, MEM_RELEASE);
-        CloseHandle(hProcess);
-        return 1;
-    }
-
-    // Wait for the remote thread to finish
-    WaitForSingleObject(hThread, INFINITE);
-
-    // Cleanup and close handles
-    VirtualFreeEx(hProcess, dllPathAddress, 0, MEM_RELEASE);
-    CloseHandle(hThread);
-    CloseHandle(hProcess);
-
-    std::cout << "DLL injected successfully!" << std::endl;
-    return 0;
-}
+// Pre-declare functions
+std::string generatePassword(int length);
+bool restartExplorer(); // Restart explorer.exe
+bool initializeKernel32(HMODULE& kernel32Module, LPVOID& loadLibraryAddress); // Initialize kernel32.dll and LoadLibraryA
+int inject_dll(const std::string& dllPath, DWORD processID, LPVOID loadLibraryAddress); // Inject DLL into target process
 
 int loadMenu(int totalOptions) {
     std::cout << "Welcome to ohusq's learning project" << std::endl << "Please select an option from below." << std::endl;
 
-    std::cout << "1. Option 1 (DLL Injector)" << std::endl;
-    std::cout << "2. Option 2 (Restart explorer)" << std::endl;
+    std::cout << "1. DLL Injector" << std::endl;
+    std::cout << "2. Restart explorer" << std::endl;
+    std::cout << "3. Password generator" << std::endl;
 
     int x{};
     std::cout << "Enter a number: ";
@@ -95,23 +32,9 @@ int loadMenu(int totalOptions) {
     }
 }
 
-bool restartExplorer() {
-	std::cout << "Restarting explorer.exe..." << std::endl;
-	system("taskkill /f /im explorer.exe");
-	system("start explorer.exe");
-    if (system("explorer.exe")) {
-		std::cout << "Explorer restarted successfully!" << std::endl;
-        return true;
-	}
-    else {
-		std::cout << "Failed to restart explorer.exe!" << std::endl;
-        return false;
-	}
-}
-
 int main()
 {
-    int totalOptions = 2;
+    int totalOptions = 3;
     int choice = loadMenu(totalOptions); // Load menu and get user input
 
     std::string dllPath;
@@ -121,7 +44,7 @@ int main()
     bool initializationSuccessful = false; // Flag to check if initialization was successful
 
     switch (choice) {
-    case 1:
+    case 1: // DLL Injector
         std::cout << "You chose option 1 (DLL Injector)" << std::endl;
 
         DWORD processID; // Variable to store the target process ID
@@ -140,7 +63,7 @@ int main()
 
         inject_dll(dllPath, processID, loadLibraryAddress); // Pass processID instead of program name
         break;
-    case 2:
+    case 2: // Restart explorer
         std::cout << "You chose option 2" << std::endl;
         bool explorerInt;
         explorerInt = restartExplorer(); // true = success, false = fail
@@ -152,6 +75,13 @@ int main()
 			std::cout << "It seems explorer.exe failed to start, you can restart it with:\nWIN + R and type 'explorer.exe' and hit run!" << std::endl;
 		}
         break;
+    case 3: // Password generator
+        std::cout << "You chose option 3" << std::endl;
+        int length;
+        std::cout << "Enter the length of the password: ";
+        std::cin >> length;
+        std::cout << "Your password is: " << generatePassword(length) << std::endl;
+		break;
     default:
         std::cout << "You chose an invalid option" << std::endl;
         exit(0);
