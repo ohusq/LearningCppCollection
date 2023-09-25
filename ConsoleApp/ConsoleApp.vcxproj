@@ -132,6 +132,7 @@
     <ClCompile Include="ConsoleApp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="autoclicker.h" />
     <ClInclude Include="DLL_Functions.h" />
     <ClInclude Include="passwordGen.h" />
     <ClInclude Include="restartExplorerHeader.h" />

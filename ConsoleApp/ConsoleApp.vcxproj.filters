@@ -32,5 +32,8 @@
     <ClInclude Include="taskkill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="autoclicker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
