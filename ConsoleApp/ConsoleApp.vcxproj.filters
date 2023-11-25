@@ -35,5 +35,8 @@
     <ClInclude Include="autoclicker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RockPaperScissors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

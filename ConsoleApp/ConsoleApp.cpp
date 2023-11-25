@@ -7,6 +7,7 @@
 #include "DLL_Functions.h" // DLL injector header (initializeKernel32, inject_dll functions)
 #include "taskkill.h" // Taskkill header (taskkill_force function)
 #include "autoclicker.h" // Autoclicker header (autoclicker function)
+#include "RockPaperScissors.h"
 
 // Pre-declare functions
 std::string generatePassword(int length);
@@ -14,6 +15,7 @@ bool restartExplorer(); // Restart explorer.exe
 bool initializeKernel32(HMODULE& kernel32Module, LPVOID& loadLibraryAddress); // Initialize kernel32.dll and LoadLibraryA
 int inject_dll(const std::string& dllPath, DWORD processID, LPVOID loadLibraryAddress); // Inject DLL into target process
 int autoclicker(bool enabled, int cps); // Autoclicker (enabled = true/false, cps = clicks per second
+int playRockPaperScissors();
 
 int loadMenu(int totalOptions) {
 	std::cout << "Welcome to ohusq's learning project" << std::endl << "Please select an option from below." << std::endl;
@@ -24,6 +26,7 @@ int loadMenu(int totalOptions) {
 	std::cout << "4. Taskkill (PROC NAME)" << std::endl;
 	std::cout << "5. Taskkill (PID)" << std::endl;
 	std::cout << "6. Autoclicker" << std::endl;
+	std::cout << "7. Rock Paper Scissors" << std::endl;
 
 	int x{};
 	std::cout << "Enter a number: ";
@@ -41,7 +44,7 @@ int loadMenu(int totalOptions) {
 
 int main()
 {
-	int totalOptions = 6; // Total options in menu
+	const int totalOptions = 7; // Total options in menu
 	int choice = loadMenu(totalOptions); // Load menu and get user input
 
 	std::string dllPath;
@@ -112,7 +115,10 @@ int main()
 		std::cout << "Autoclicker has been enabled!\nDisable key: 'CTRL + L'" << std::endl;
 		autoclicker(true, cps);
 		break;
-		
+	case 7:
+		std::cout << "You chose option 7" << std::endl;
+		playRockPaperScissors();
+		break;
 	default:
 		std::cout << "You chose an invalid option" << std::endl;
 		exit(0);
