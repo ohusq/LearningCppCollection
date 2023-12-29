@@ -44,8 +44,8 @@ int loadMenu(const int totalOptions) {
 
 int main()
 {
-	const int totalOptions{ 7 }; // Total options in menu
-	const int choice{ loadMenu(totalOptions) }; // Load menu and get user input
+	int totalOptions = 6; // Total options in menu
+	int choice = loadMenu(totalOptions); // Load menu and get user input
 
 	switch (choice) {
 	case 1: // DLL Injector
@@ -118,14 +118,8 @@ int main()
 		std::cout << "Autoclicker has been enabled!\nDisable key: 'CTRL + L'" << std::endl;
 		autoclicker(true, cps);
 		break;
-	}
-	case 7: // Rock Paper Scissors
-	{
-		std::cout << "You chose option 7" << std::endl;
-		playRockPaperScissors();
-		break;
-	}
-	default: // If there is an invalid number entered
+		
+	default:
 		std::cout << "You chose an invalid option" << std::endl;
 		exit(0);
 		break;
